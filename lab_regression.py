@@ -121,7 +121,8 @@ def evaluate_classifier(pipeline, X_train, X_test, y_train, y_test):
     # TODO: Fit the pipeline on training data, predict on test, compute metrics
     pipeline.fit(X_train, y_train)
     y_pred = pipeline.predict(X_test)
-    print(classification_report(y_test, y_pred))
+
+    
 
     return {
         "accuracy": accuracy_score(y_test, y_pred),
@@ -209,6 +210,9 @@ if __name__ == "__main__":
             X_train, X_test, y_train, y_test = split
             pipe = build_logistic_pipeline()
             if pipe:
+                pipe.fit(X_train, y_train)#تدريب الموديل
+                y_pred = pipe.predict(X_test)#التنبؤ
+                #احسب الميتريكس باستخدام الفنكشن evaluate_classifier
                 metrics = evaluate_classifier(pipe, X_train, X_test, y_train, y_test)
                 print(f"Logistic Regression: {metrics}")
 
