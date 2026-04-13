@@ -17,6 +17,7 @@ from sklearn.metrics import (accuracy_score, classification_report, confusion_ma
                              mean_absolute_error, precision_score, r2_score, recall_score)
 
 
+
 def load_data(filepath="data/telecom_churn.csv"):
     """Load the telecom churn dataset.
 
@@ -120,6 +121,7 @@ def evaluate_classifier(pipeline, X_train, X_test, y_train, y_test):
     # TODO: Fit the pipeline on training data, predict on test, compute metrics
     pipeline.fit(X_train, y_train)
     y_pred = pipeline.predict(X_test)
+    print(classification_report(y_test, y_pred))
 
     return {
         "accuracy": accuracy_score(y_test, y_pred),
@@ -127,7 +129,7 @@ def evaluate_classifier(pipeline, X_train, X_test, y_train, y_test):
         "recall": recall_score(y_test, y_pred, zero_division=0),
         "f1": f1_score(y_test, y_pred, zero_division=0)
     }
-
+  
 
 def evaluate_regressor(pipeline, X_train, X_test, y_train, y_test):
     """Train the pipeline and return regression metrics.
@@ -225,20 +227,20 @@ if __name__ == "__main__":
             if ridge_pipe:
                 reg_metrics = evaluate_regressor(ridge_pipe, X_tr, X_te, y_tr, y_te)
                 print(f"Ridge Regression: {reg_metrics}")
-        lasso_pipe = build_lasso_pipeline()
+            lasso_pipe = build_lasso_pipeline()
 
-        if lasso_pipe:
-            lasso_pipe.fit(X_tr, y_tr)
-            ridge_pipe.fit(X_tr, y_tr)
+            if lasso_pipe:
+                lasso_pipe.fit(X_tr, y_tr)
+                ridge_pipe.fit(X_tr, y_tr)
 
-            ridge_coef = ridge_pipe.named_steps["model"].coef_
-            lasso_coef = lasso_pipe.named_steps["model"].coef_
+                ridge_coef = ridge_pipe.named_steps["model"].coef_
+                lasso_coef = lasso_pipe.named_steps["model"].coef_
 
-            feature_names = X_tr.columns
+                feature_names = X_tr.columns
 
-            print("\nFeature Coefficients Comparison:")
-            for name, r_coef, l_coef in zip(feature_names, ridge_coef, lasso_coef):
-                print(f"{name:20} | Ridge: {r_coef:.4f} | Lasso: {l_coef:.4f}")    
+                print("\nFeature Coefficients Comparison:")
+                for name, r_coef, l_coef in zip(feature_names, ridge_coef, lasso_coef):
+                    print(f"{name:20} | Ridge: {r_coef:.4f} | Lasso: {l_coef:.4f}")    
 # In this case, Lasso did not drive any feature coefficients to zero.
 # This suggests that all features contribute to predicting monthly charges.
 # It may also indicate that the regularization strength (alpha=0.1) is not strong enough
